@@ -25,7 +25,14 @@ export const postShortCode = async (req, res) => {
 };
 
 export const redirectToShortLink = async (req, res) => {
+  try {
     let shortCode = req.params.shortCode;
-    let shortLink = await getShortLinkByShortCode(shortCode)    
-    res.redirect(shortLink.url)    
+    let shortLink = await getShortLinkByShortCode(shortCode);
+    if (!shortLink) {
+      res.status(400).send("Short Link not Found");
+    }
+    res.redirect(shortLink.url);
+  } catch (error) {
+    console.error(error);
+  }
 };
