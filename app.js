@@ -1,13 +1,12 @@
 import express from "express";
+import { shortenerRouter } from "./routes/shortener.routes.js";
 
 const app = express();
+
 app.use(express.json());
-app.use(express.static("public"))
-app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: true }));
+app.use(shortenerRouter);
 
-app.get("/", (req, res) => {
-  res.render("index");
-});
-
-app.listen(3000);
+app.listen(process.env.PORT);
