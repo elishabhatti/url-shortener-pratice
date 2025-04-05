@@ -17,7 +17,9 @@ export const getShortenerPage = async (req, res) => {
 export const postShortCode = async (req, res) => {
   let { url, shortCode } = req.body;
   try {
-    // let userId = req.user.id;
+    let userId = req.user.id;
+    console.log(userId);
+    
     await insertShortLink({ url, shortCode, userId });
     res.redirect("/");
   } catch (error) {
