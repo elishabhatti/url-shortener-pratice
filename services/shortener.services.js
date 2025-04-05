@@ -2,8 +2,8 @@ import { db } from "../config/db.config.js";
 import { shortLink } from "../drizzle/schema.js";
 import { eq } from "drizzle-orm";
 
-export const insertShortLink = async ({ url, shortCode }) => {
-  await db.insert(shortLink).values({ url, shortCode }).$returningId();
+export const insertShortLink = async ({ url, shortCode, userId }) => {
+  await db.insert(shortLink).values({ url, shortCode, userId }).$returningId();
 };
 
 export const getAllShortLinks = async () => {
