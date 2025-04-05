@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { getShortenerPage } from "../controllers/shortener.controller.js";
+import { getShortenerPage, postShortCode } from "../controllers/shortener.controller.js";
 
 export const shortenerRouter = Router()
 
 shortenerRouter.get("/", getShortenerPage)
+shortenerRouter.post("/addShortCode", postShortCode)

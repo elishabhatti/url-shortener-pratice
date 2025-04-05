@@ -1,11 +1,11 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "a427db20-d7b3-4869-85a6-aec7f1e07fb1",
+  "id": "dd58edbc-805c-4f04-9d42-144d8d188889",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "short_link": {
-      "name": "short_link",
+    "shortlink": {
+      "name": "shortlink",
       "columns": {
         "id": {
           "name": "id",
@@ -32,16 +32,16 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "short_link_id": {
-          "name": "short_link_id",
+        "shortlink_id": {
+          "name": "shortlink_id",
           "columns": [
             "id"
           ]
         }
       },
       "uniqueConstraints": {
-        "short_link_shortCode_unique": {
-          "name": "short_link_shortCode_unique",
+        "shortlink_shortCode_unique": {
+          "name": "shortlink_shortCode_unique",
           "columns": [
             "shortCode"
           ]
