@@ -1,6 +1,7 @@
 import {
   insertShortLink,
   getAllShortLinks,
+  getShortLinkByShortCode,
 } from "../services/shortener.services.js";
 
 export const getShortenerPage = async (req, res) => {
@@ -21,4 +22,10 @@ export const postShortCode = async (req, res) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+export const redirectToShortLink = async (req, res) => {
+    let shortCode = req.params.shortCode;
+    let shortLink = await getShortLinkByShortCode(shortCode)    
+    res.redirect(shortLink.url)    
 };
