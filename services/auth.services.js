@@ -10,6 +10,6 @@ export const createUser = async ({ name, email, password }) => {
   return user;
 };
 
-export const hashedPassword = async (password) => {
+export const hashUserPassword = async (password) => {
   return await argon2.hash(password, 12);
 };

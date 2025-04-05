@@ -1,4 +1,4 @@
-import { createUser, hashedPassword } from "../services/auth.services.js";
+import { createUser, hashUserPassword } from "../services/auth.services.js";
 
 export const getRegisterPage = async (req, res) => {
   res.render("auth/register");
@@ -7,8 +7,8 @@ export const getRegisterPage = async (req, res) => {
 export const postRegister = async (req, res) => {
   let { name, email, password } = req.body;
   console.log(name, email, password);
-  await hashedPassword(password)
-  let user = await createUser({ name, email, password });
+  let hashedPassword = await hashUserPassword(password)
+  let user = await createUser({ name, email, password: hashedPassword });
   console.log(user);
 
   res.redirect("/");
