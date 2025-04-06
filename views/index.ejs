@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body class="text-gray-900">
+    <%- include("partials/navbar") %>
     <div class="flex justify-center items-center p-10">
       <form
-        class="w-[1000px] bg-white p-6 rounded-lg border border-gray-300 mt-10"
+        class="w-[1000px] bg-white p-6 rounded-lg border-2 border-gray-300 mt-10"
         action="/addShortCode"
         method="post"
       >
@@ -18,7 +19,7 @@
 
         <label class="block text-sm font-medium mb-1">Enter URL</label>
         <input
-          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-500"
+          class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-500"
           type="url"
           name="url"
           placeholder="https://example.com"
@@ -27,7 +28,7 @@
 
         <label class="block text-sm font-medium mt-4 mb-1">Short Code</label>
         <input
-          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-500"
+          class="w-full px-4 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-500"
           type="text"
           name="shortCode"
           placeholder="Enter Short Code"
@@ -36,7 +37,7 @@
 
         <button
           type="submit"
-          class="w-full mt-5 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition"
+          class="mt-5 px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition"
         >
           Create Short Link
         </button>
