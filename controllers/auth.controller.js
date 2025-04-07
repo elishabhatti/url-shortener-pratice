@@ -51,10 +51,10 @@ export const postLogin = async (req, res) => {
     email: user.email,
   });
 
-  res.cookie("isLoggedIn", token);
+  res.cookie("token", token);
   return res.redirect("/");
 };
 
 export const logoutUser = (req, res) => {
-  res.clearCookie("isLoggedIn").redirect("/login");
+  res.clearCookie("token").redirect("/login");
 };

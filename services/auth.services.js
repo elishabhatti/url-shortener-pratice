@@ -1,6 +1,6 @@
 import { db } from "../config/db.config.js";
 import { usersTable } from "../drizzle/schema.js";
-import argon2, { hash } from "argon2";
+import argon2 from "argon2";
 import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 
@@ -28,4 +28,7 @@ export const generateToken = ({ id, name, email }) => {
   return jwt.sign({ id, name, email }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
+};
+export const jwtVerifyToken = (token) => {
+  return jwt.verify(token, process.env.JWT_SECRET);
 };
