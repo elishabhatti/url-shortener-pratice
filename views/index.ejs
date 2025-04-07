@@ -43,35 +43,52 @@
         </button>
 
         <!-- Shortened Links Display -->
-          <div class="space-y-2 text-sm">
-            <div class="mt-6">
-              <h2 class="text-lg font-semibold mb-3">Your Short Links</h2>
-              <div class="space-y-2">
-                <% shortCodes.forEach((link) => { %>
-                <div
-                  class="p-3 border border-gray-400 rounded-md flex justify-between items-center"
-                >
-                  <div>
-                    <a
-                      target="_blank"
-                      href="/<%= link.shortCode %>"
-                      class="text-blue-500 hover:text-blue-500"
-                    >
-                      <span class="font-medium">Short Code:</span>
-                      <%= host %>/<%= link.shortCode %>
-                    </a>
-                    <p class="text-sm text-gray-600">
-                      <span class="font-medium">URL:</span>
-                      <%= (link.url).length >= 30 ? (link.url).slice(0, 30) +
-                      "..." : link.url %>
-                    </p>
-                  </div>
+        <div class="space-y-2 text-sm">
+          <div class="mt-6">
+            <h2 class="text-lg font-semibold mb-3">Your Short Links</h2>
+            <% if(shortCodes.length > 0) { %>
+            <div class="space-y-2">
+              <% shortCodes.forEach((link) => { %>
+              <div
+                class="p-3 border border-gray-400 rounded-md flex justify-between items-center"
+              >
+                <div>
+                  <a
+                    target="_blank"
+                    href="/urls/<%= link.shortCode %>"
+                    class="text-blue-500 hover:text-blue-500"
+                  >
+                    <span class="font-medium">Short Code:</span>
+                    <%= host %>/<%= link.shortCode %>
+                  </a>
+                  <p class="text-sm text-gray-600">
+                    <span class="font-medium">URL:</span>
+                    <%= (link.url).length >= 30 ? (link.url).slice(0, 30) +
+                    "..." : link.url %>
+                  </p>
                 </div>
-                <% }) %>
+                <div>
+                  <a href="/deleteshortCode/<%= link.id %>">
+                    <ion-icon class="text-xl" name="trash-outline"></ion-icon>
+                  </a>
+                </div>
+              </div>
+              <% }) %>
             </div>
+            <% }else { %>
+            <p class="text-md bg-gray-100 px-2 py-2 rounded-md">No Short Code Created</p>
+            <% } %>
           </div>
         </div>
       </form>
     </div>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
   </body>
 </html>

@@ -13,7 +13,7 @@ app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(authRouter);
 app.use(shortenerRouter);
+app.use(authRouter);
 
 app.listen(PORT);
