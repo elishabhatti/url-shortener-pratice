@@ -3,10 +3,9 @@ import {
   getAllShortLinks,
   getShortLinkByShortCode,
   deleteShortCodeById,
+  findShortLinkById,
 } from "../services/shortener.services.js";
 import { jwtVerifyToken } from "../services/auth.services.js";
-import { db } from "../config/db.config.js";
-import { shortLink } from "../drizzle/schema.js";
 
 export const getShortenerPage = async (req, res) => {
   try {
@@ -48,19 +47,25 @@ export const redirectToShortLink = async (req, res) => {
 export const deleteShortCode = async (req, res) => {
   try {
     const id = req.params.id;
-    const result = await deleteShortCodeById(id);
-
-    if (result.rowCount === 0) {
-      // No rows were deleted (shortcode didn't exist)
-      console.log("E");
-    } else {
-      console.log("S");
-      // req.flash('success', 'Short code deleted successfully');
-    }
-
+    await deleteShortCodeById(id);
     res.redirect("/");
   } catch (error) {
     console.error("Error deleting short code:", error);
     res.redirect("/");
   }
+};
+
+export const getUpdateShortCodePageById = async (req, res) => {
+  const id = req.params.id;
+  const shortLink = await findShortLinkById(id);
+
+  if (!shortLink) {
+    return res.status(404).send("Short link not found");
+  }
+
+  res.render("edit", {
+    id: shortLink.id,
+    url: shortLink.url,
+    shortCode: shortLink.shortCode,
+  });
 };

@@ -67,16 +67,24 @@
                     "..." : link.url %>
                   </p>
                 </div>
-                <div>
+                <div class="space-x-2">
                   <a href="/deleteshortCode/<%= link.id %>">
                     <ion-icon class="text-xl" name="trash-outline"></ion-icon>
+                  </a>
+                  <a href="/getUpdateShortCodePageById/<%= link.id %>">
+                    <ion-icon class="text-xl" name="eyedrop-outline"></ion-icon>
+                  </a>
+                  <a href="/copyshortCode/<%= link.id %>">
+                    <ion-icon class="text-xl" name="copy-outline"></ion-icon>
                   </a>
                 </div>
               </div>
               <% }) %>
             </div>
             <% }else { %>
-            <p class="text-md bg-gray-100 px-2 py-2 rounded-md">No Short Code Created</p>
+            <p class="text-md bg-gray-100 px-2 py-2 rounded-md">
+              No Short Code Created
+            </p>
             <% } %>
           </div>
         </div>
