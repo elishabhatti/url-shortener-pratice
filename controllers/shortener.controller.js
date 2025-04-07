@@ -4,6 +4,7 @@ import {
   getShortLinkByShortCode,
   deleteShortCodeById,
   findShortLinkById,
+  updatedShortCode,
 } from "../services/shortener.services.js";
 import { jwtVerifyToken } from "../services/auth.services.js";
 
@@ -68,4 +69,10 @@ export const getUpdateShortCodePageById = async (req, res) => {
     url: shortLink.url,
     shortCode: shortLink.shortCode,
   });
+};
+
+export const updateShortCode = async (req, res) => {
+  const { id, url, shortCode } = req.body;
+  await updatedShortCode({id, url, shortCode})
+  res.redirect("/")
 };

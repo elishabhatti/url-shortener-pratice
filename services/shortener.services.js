@@ -25,3 +25,10 @@ export const findShortLinkById = async (id) => {
   let [result] = await db.select().from(shortLink).where(eq(shortLink.id, id));
   return result;
 };
+
+export const updatedShortCode = async ({ id, url, shortCode }) => {
+  return await db
+    .update(shortLink)
+    .set({url, shortCode})
+    .where(eq(shortLink.id, id));
+};
