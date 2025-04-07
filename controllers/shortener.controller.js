@@ -6,7 +6,7 @@ import {
 
 export const getShortenerPage = async (req, res) => {
   try {
-    let links = await getAllShortLinks();
+    let links = await getAllShortLinks(req.cookies.isLoggedIn);
     let host = req.headers.host;
     res.render("index", { shortCodes: links, host });
   } catch (error) {
@@ -17,7 +17,7 @@ export const getShortenerPage = async (req, res) => {
 export const postShortCode = async (req, res) => {
   let { url, shortCode } = req.body;
   try {
-    let userId = req.cookies.isLoggedIn;    
+    let userId = req.cookies.isLoggedIn;
     await insertShortLink({ url, shortCode, userId });
     res.redirect("/");
   } catch (error) {
