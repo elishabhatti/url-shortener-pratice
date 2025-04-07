@@ -6,7 +6,7 @@ import {
 } from "../services/auth.services.js";
 
 export const getRegisterPage = async (req, res) => {
-  // if (req.cookies.isLoggedIn) return res.redirect("/");
+  if (req.cookies.isLoggedIn) return res.redirect("/");
   res.render("auth/register");
 };
 
@@ -28,7 +28,7 @@ export const postRegister = async (req, res) => {
 };
 
 export const getLoginPage = (req, res) => {
-  // if (req.cookies.isLoggedIn) return res.redirect("/");
+  if (req.cookies.isLoggedIn) return res.redirect("/");
   res.render("auth/login");
 };
 
@@ -36,14 +36,20 @@ export const postLogin = async (req, res) => {
   let { email, password } = req.body;
 
   let [user] = await getUserByEmail(email);
+
   if (!user) {
     console.log("Email is Invalid");
     return res.redirect("/register");
   }
 
+  const userId = user.id;
   const isPasswordValid = await comparePassword(user.password, password);
   if (!isPasswordValid) return res.redirect("/login");
 
-  res.cookie("isLoggedIn", true);
+  res.cookie("isLoggedIn", userId);
   return res.redirect("/");
+};
+
+export const logoutUser = (req, res) => {
+  res.clearCookie("isLoggedIn").redirect("/login");
 };
