@@ -3,6 +3,8 @@ import { usersTable } from "../drizzle/schema.js";
 import argon2 from "argon2";
 import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const createUser = async ({ name, email, password }) => {
   const [user] = await db

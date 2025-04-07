@@ -9,6 +9,8 @@ export const getShortenerPage = async (req, res) => {
   try {
     const decodedToken = jwtVerifyToken(req.cookies.token);
     const userId = decodedToken.id;
+    console.log(userId);
+
     let links = await getAllShortLinks(userId);
     let host = req.headers.host;
     res.render("index", { shortCodes: links, host });
@@ -20,11 +22,8 @@ export const getShortenerPage = async (req, res) => {
 export const postShortCode = async (req, res) => {
   let { url, shortCode } = req.body;
   try {
-    let userId = req.cookies.token;
-    if (url.length >= 255) {
-      return res.redirect("/");
-    }
-    await insertShortLink({ url, shortCode, userId });
+    let userId = jwtVerifyToken(req.cookies.token);
+    await insertShortLink({ url, shortCode, userId: userId.id });
     res.redirect("/");
   } catch (error) {
     console.error(error);
