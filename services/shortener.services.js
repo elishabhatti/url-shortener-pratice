@@ -1,5 +1,5 @@
 import { db } from "../config/db.config.js";
-import { shortLink, usersTable } from "../drizzle/schema.js";
+import { shortLink } from "../drizzle/schema.js";
 import { eq } from "drizzle-orm";
 
 export const insertShortLink = async ({ url, shortCode, userId }) => {
@@ -11,7 +11,10 @@ export const getAllShortLinks = async (userId) => {
 };
 
 export const getShortLinkByShortCode = async (shortCode) => {
-  let [result] = await db.select().from(shortLink).where(eq(shortLink.shortCode, shortCode));
+  let [result] = await db
+    .select()
+    .from(shortLink)
+    .where(eq(shortLink.shortCode, shortCode));
   return result;
 };
 

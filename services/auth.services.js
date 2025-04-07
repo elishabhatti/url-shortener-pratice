@@ -2,6 +2,7 @@ import { db } from "../config/db.config.js";
 import { usersTable } from "../drizzle/schema.js";
 import argon2, { hash } from "argon2";
 import { eq } from "drizzle-orm";
+import jwt from "jsonwebtoken";
 
 export const createUser = async ({ name, email, password }) => {
   const [user] = await db
@@ -21,4 +22,10 @@ export const comparePassword = async (hash, password) => {
 
 export const getUserByEmail = async (email) => {
   return await db.select().from(usersTable).where(eq(usersTable.email, email));
+};
+
+export const generateToken = ({ id, email }) => {
+  return jwt.sign({ id, email }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
 };

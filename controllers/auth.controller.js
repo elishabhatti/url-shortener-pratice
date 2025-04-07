@@ -3,6 +3,7 @@ import {
   hashPassword,
   getUserByEmail,
   comparePassword,
+  generateToken,
 } from "../services/auth.services.js";
 
 export const getRegisterPage = async (req, res) => {
@@ -41,12 +42,15 @@ export const postLogin = async (req, res) => {
     console.log("Email is Invalid");
     return res.redirect("/register");
   }
-
-  const userId = user.id;
   const isPasswordValid = await comparePassword(user.password, password);
   if (!isPasswordValid) return res.redirect("/login");
 
-  res.cookie("isLoggedIn", userId);
+  const token = generateToken({
+    id: user.id,
+    email: user.email,
+  });
+
+  res.cookie("isLoggedIn", token);
   return res.redirect("/");
 };
 
