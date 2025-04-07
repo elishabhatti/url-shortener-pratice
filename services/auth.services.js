@@ -24,8 +24,8 @@ export const getUserByEmail = async (email) => {
   return await db.select().from(usersTable).where(eq(usersTable.email, email));
 };
 
-export const generateToken = ({ id, email }) => {
-  return jwt.sign({ id, email }, process.env.JWT_SECRET, {
+export const generateToken = ({ id, name, email }) => {
+  return jwt.sign({ id, name, email }, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
 };
