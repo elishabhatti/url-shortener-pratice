@@ -1,4 +1,7 @@
-import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from "../config/constants.js";
+import {
+  ACCESS_TOKEN_EXPIRY,
+  REFRESH_TOKEN_EXPIRY,
+} from "../config/constants.js";
 import {
   createUser,
   hashPassword,
@@ -46,13 +49,6 @@ export const postLogin = async (req, res) => {
   const isPasswordValid = await comparePassword(user.password, password);
   if (!isPasswordValid) return res.redirect("/login");
 
-  // const token = generateToken({
-  //   id: user.id,
-  //   name: user.name,
-  //   email: user.email,
-  // });
-
-  // res.cookie("access_token", token);
   const session = await createSession(user.id, {
     ip: req.clientIp,
     userAgent: req.headers["user_agent"],
@@ -67,15 +63,15 @@ export const postLogin = async (req, res) => {
   const refreshToken = createRefreshToken(session.id);
   const baseConfig = { httpOnly: true, secure: true };
 
-  res.cookie("access_token", accessToken,{
+  res.cookie("access_token", accessToken, {
     ...baseConfig,
     maxAge: ACCESS_TOKEN_EXPIRY,
-  })
+  });
 
-  res.cookie("refresh_token", refreshToken,{
+  res.cookie("refresh_token", refreshToken, {
     ...baseConfig,
     maxAge: REFRESH_TOKEN_EXPIRY,
-  })
+  });
 
   return res.redirect("/");
 };
