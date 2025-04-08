@@ -9,7 +9,7 @@ import {
 import { jwtVerifyToken } from "../services/auth.services.js";
 
 export const getShortenerPage = async (req, res) => {
-  if(!req.cookies.token) return res.redirect("/login")
+  if(!req.cookies.access_token) return res.redirect("/login")
   try {
     const decodedToken = jwtVerifyToken(req.cookies.token);
     const userId = decodedToken.id;
