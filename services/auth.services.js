@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import {
   ACCESS_TOKEN_EXPIRY,
   MILLISECONDS_PER_SECOND,
+  REFRESH_TOKEN_EXPIRY,
 } from "../config/constants.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -51,5 +52,11 @@ export const createSession = async (userId, { ip, userAgent }) => {
 export const createAccessToken = ({ id, name, email, sessionId }) => {
   return jwt.sign({ id, name, email, sessionId }, process.env.JWT_SECRET, {
     expiresIn: ACCESS_TOKEN_EXPIRY / MILLISECONDS_PER_SECOND,
+  });
+};
+
+export const createRefreshToken = (sessionId) => {
+  return jwt.sign({sessionId }, process.env.JWT_SECRET, {
+    expiresIn: REFRESH_TOKEN_EXPIRY / MILLISECONDS_PER_SECOND,
   });
 };
