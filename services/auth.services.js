@@ -25,9 +25,8 @@ export const comparePassword = async (hash, password) => {
 export const getUserByEmail = async (email) => {
   return await db.select().from(usersTable).where(eq(usersTable.email, email));
 };
-
 export const generateToken = ({ id, name, email }) => {
-  console.log("JWT_SECRET:", process.env.JWT_SECRET);
+
   return jwt.sign({ id, name, email }, process.env.JWT_SECRET, {
     expiresIn: 60 * 60 * 24 * 30 
   });

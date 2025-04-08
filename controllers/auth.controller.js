@@ -7,7 +7,6 @@ import {
 } from "../services/auth.services.js";
 
 export const getRegisterPage = async (req, res) => {
-  if (req.cookies.isLoggedIn) return res.redirect("/");
   res.render("auth/register");
 };
 
@@ -29,7 +28,6 @@ export const postRegister = async (req, res) => {
 };
 
 export const getLoginPage = (req, res) => {
-  if (req.cookies.isLoggedIn)return res.redirect("/");
   res.render("auth/login");
 };
 

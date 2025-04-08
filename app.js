@@ -14,7 +14,13 @@ app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use(verifyAuthentication)
+app.use(verifyAuthentication);
+
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  return next();
+});
+
 app.use(shortenerRouter);
 app.use(authRouter);
 

@@ -9,13 +9,13 @@ import {
 import { jwtVerifyToken } from "../services/auth.services.js";
 
 export const getShortenerPage = async (req, res) => {
-  if(!req.cookies.access_token) return res.redirect("/login")
+  if (!req.cookies.access_token) return res.redirect("/login");
   try {
-    const decodedToken = jwtVerifyToken(req.cookies.token);
+    const decodedToken = jwtVerifyToken(req.cookies.access_token);
     const userId = decodedToken.id;
     let links = await getAllShortLinks(userId);
     let host = req.headers.host;
-    res.render("index", { shortCodes: links, host });
+    res.render("index", { shortCodes: links, host, userId });
   } catch (error) {
     console.error(error);
   }
@@ -24,7 +24,7 @@ export const getShortenerPage = async (req, res) => {
 export const postShortCode = async (req, res) => {
   let { url, shortCode } = req.body;
   try {
-    let userId = jwtVerifyToken(req.cookies.token);
+    let userId = jwtVerifyToken(req.cookies.access_token);
     await insertShortLink({ url, shortCode, userId: userId.id });
     res.redirect("/");
   } catch (error) {
@@ -74,6 +74,6 @@ export const getUpdateShortCodePageById = async (req, res) => {
 
 export const updateShortCode = async (req, res) => {
   const { id, url, shortCode } = req.body;
-  await updatedShortCode({id, url, shortCode})
-  res.redirect("/")
+  await updatedShortCode({ id, url, shortCode });
+  res.redirect("/");
 };
