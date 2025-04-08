@@ -56,3 +56,8 @@ export const postLogin = async (req, res) => {
 export const logoutUser = (req, res) => {
   res.clearCookie("access_token").redirect("/login");
 };
+
+export const getMePage = (req, res) => {
+  if (!req.user) return res.send("Not Logged In");
+  return res.send(`${req.user.name} ${req.user.email}`);
+};

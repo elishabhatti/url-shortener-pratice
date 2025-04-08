@@ -15,8 +15,8 @@
         action="/login"
         method="post"
       >
-      <%- include("partials/loggedin") %>
- 
+        <h1 class="text-2xl font-semibold text-center mb-6">Login Account</h1>
+        <%- include("../partials/loggedin") %>
 
         <label class="block text-sm font-medium mt-4 mb-1">Email</label>
         <input
@@ -38,7 +38,7 @@
 
         <button
           type="submit"
-          class=" mt-5 py-2 px-4 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition"
+          class="mt-5 py-2 px-4 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition"
         >
           Login Account
         </button>

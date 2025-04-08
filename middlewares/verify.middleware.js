@@ -9,7 +9,6 @@ export const verifyAuthentication = async (req, res, next) => {
   try {
     const decodedToken = jwtVerifyToken(token);
     req.user = decodedToken;
-    console.log("Req User:", req.user);
   } catch (error) {
     console.log("error", error);
   }
