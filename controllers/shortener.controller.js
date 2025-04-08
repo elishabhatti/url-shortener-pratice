@@ -5,6 +5,7 @@ import {
   deleteShortCodeById,
   findShortLinkById,
   updatedShortCode,
+  createRandomShortCode,
 } from "../services/shortener.services.js";
 import { jwtVerifyToken } from "../services/auth.services.js";
 
@@ -25,6 +26,10 @@ export const postShortCode = async (req, res) => {
   let { url, shortCode } = req.body;
   try {
     let userId = jwtVerifyToken(req.cookies.access_token);
+    const randomShortCode = createRandomShortCode();
+    if (!shortCode) {
+      shortCode = randomShortCode;
+    }
     await insertShortLink({ url, shortCode, userId: userId.id });
     res.redirect("/");
   } catch (error) {

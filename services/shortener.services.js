@@ -1,6 +1,7 @@
 import { db } from "../config/db.config.js";
 import { shortLink } from "../drizzle/schema.js";
 import { eq } from "drizzle-orm";
+import crypto from "crypto"
 
 export const insertShortLink = async ({ url, shortCode, userId }) => {
   await db.insert(shortLink).values({ url, shortCode, userId }).$returningId();
@@ -32,3 +33,7 @@ export const updatedShortCode = async ({ id, url, shortCode }) => {
     .set({url, shortCode})
     .where(eq(shortLink.id, id));
 };
+
+export const createRandomShortCode = () => {
+  return crypto.randomBytes(5).toString("hex")
+}
