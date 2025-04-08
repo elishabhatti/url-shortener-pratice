@@ -27,8 +27,9 @@ export const getUserByEmail = async (email) => {
 };
 
 export const generateToken = ({ id, name, email }) => {
+  console.log("JWT_SECRET:", process.env.JWT_SECRET);
   return jwt.sign({ id, name, email }, process.env.JWT_SECRET, {
-    expiresIn: "30d",
+    expiresIn: 60 * 60 * 24 * 30 
   });
 };
 export const jwtVerifyToken = (token) => {
