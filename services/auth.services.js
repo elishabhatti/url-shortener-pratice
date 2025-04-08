@@ -1,5 +1,5 @@
 import { db } from "../config/db.config.js";
-import { usersTable } from "../drizzle/schema.js";
+import { sessionTable, usersTable } from "../drizzle/schema.js";
 import argon2 from "argon2";
 import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
@@ -25,12 +25,21 @@ export const comparePassword = async (hash, password) => {
 export const getUserByEmail = async (email) => {
   return await db.select().from(usersTable).where(eq(usersTable.email, email));
 };
-export const generateToken = ({ id, name, email }) => {
+// export const generateToken = ({ id, name, email }) => {
+//   return jwt.sign({ id, name, email }, process.env.JWT_SECRET, {
+//     expiresIn: 60 * 60 * 24 * 30
+//   });
+// };
 
-  return jwt.sign({ id, name, email }, process.env.JWT_SECRET, {
-    expiresIn: 60 * 60 * 24 * 30 
-  });
-};
 export const jwtVerifyToken = (token) => {
   return jwt.verify(token, process.env.JWT_SECRET);
+};
+
+export const createSession = async (userId, { ip, userAgent }) => {
+  const [session] = await db
+    .insert(sessionTable)
+    .values({ userId, ip, userAgent })
+    .$returningId();
+    
+  return session;
 };

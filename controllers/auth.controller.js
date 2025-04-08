@@ -3,7 +3,8 @@ import {
   hashPassword,
   getUserByEmail,
   comparePassword,
-  generateToken,
+  createSession,
+  // generateToken,
 } from "../services/auth.services.js";
 
 export const getRegisterPage = async (req, res) => {
@@ -43,13 +44,25 @@ export const postLogin = async (req, res) => {
   const isPasswordValid = await comparePassword(user.password, password);
   if (!isPasswordValid) return res.redirect("/login");
 
-  const token = generateToken({
+  // const token = generateToken({
+  //   id: user.id,
+  //   name: user.name,
+  //   email: user.email,
+  // });
+
+  // res.cookie("access_token", token);
+  const session = await createSession(user.id, {
+    ip: req.clientIp,
+    userAgent: req.headers["user_agent"],
+  });
+  const accessToken = createAccessToken({
     id: user.id,
     name: user.name,
     email: user.email,
+    sessionId: session.id,
   });
+  const refreshToken = createRefreshToken(session.id);
 
-  res.cookie("access_token", token);
   return res.redirect("/");
 };
 
