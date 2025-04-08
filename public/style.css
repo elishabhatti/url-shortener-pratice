@@ -3,3 +3,29 @@
 * {
     font-family: "Poppins";
 }
+.logged {
+    position: relative;
+}
+
+.logged::before {
+    position:absolute;
+    content: "";
+    width: 10px;
+    height: 100%;
+    background-color: #6EE7B7;
+    left: -0px;
+    border-radius: 10px 0 0 10px;
+}
+.notlogged {
+    position: relative;
+}
+
+.notlogged::before {
+    position:absolute;
+    content: "";
+    width: 10px;
+    height: 100%;
+    background-color: #FCA5A5;
+    left: -0px;
+    border-radius: 10px 0 0 10px;
+}
