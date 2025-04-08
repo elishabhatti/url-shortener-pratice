@@ -1,0 +1,12 @@
+<% if(user) { %>
+<div class="bg-emerald-300 space-x-2 items-center flex p-2 rounded-md my-3">
+  <ion-icon class="text-2xl" name="person-outline"></ion-icon>
+  <p>You Are Logged In</p>
+</div>
+
+<% }else { %>
+<div class="bg-red-200 space-x-2 items-center flex p-2 rounded-md my-3">
+  <ion-icon class="text-2xl" name="alert-outline"></ion-icon>
+  <p>You Are Not Logged In</p>
+</div>
+<% } %>
