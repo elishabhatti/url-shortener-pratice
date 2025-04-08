@@ -4,7 +4,7 @@ import {
   getUserByEmail,
   comparePassword,
   createSession,
-  // generateToken,
+  createAccessToken,
 } from "../services/auth.services.js";
 
 export const getRegisterPage = async (req, res) => {
