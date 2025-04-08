@@ -1,3 +1,4 @@
+import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from "../config/constants.js";
 import {
   createUser,
   hashPassword,
@@ -5,6 +6,7 @@ import {
   comparePassword,
   createSession,
   createAccessToken,
+  createRefreshToken,
 } from "../services/auth.services.js";
 
 export const getRegisterPage = async (req, res) => {
@@ -61,7 +63,19 @@ export const postLogin = async (req, res) => {
     email: user.email,
     sessionId: session.id,
   });
+
   const refreshToken = createRefreshToken(session.id);
+  const baseConfig = { httpOnly: true, secure: true };
+
+  res.cookie("access_token", accessToken,{
+    ...baseConfig,
+    maxAge: ACCESS_TOKEN_EXPIRY,
+  })
+
+  res.cookie("refresh_token", refreshToken,{
+    ...baseConfig,
+    maxAge: REFRESH_TOKEN_EXPIRY,
+  })
 
   return res.redirect("/");
 };
