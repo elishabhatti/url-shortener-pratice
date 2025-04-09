@@ -10,6 +10,7 @@ import {
   createSession,
   createAccessToken,
   createRefreshToken,
+  clearSession,
 } from "../services/auth.services.js";
 
 export const getRegisterPage = async (req, res) => {
@@ -77,7 +78,9 @@ export const postLogin = async (req, res) => {
   return res.redirect("/");
 };
 
-export const logoutUser = (req, res) => {
+export const logoutUser = async (req, res) => {
+  await clearSession(req.user.sessionId);
+
   res.clearCookie("access_token");
   res.clearCookie("refresh_token");
   res.redirect("/login");
