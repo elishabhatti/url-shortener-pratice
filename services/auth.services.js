@@ -71,10 +71,46 @@ export const createRefreshToken = (sessionId) => {
   });
 };
 
+// export const refreshTokens = async (refreshToken) => {
+//   try {
+//     const decodedToken = jwtVerifyToken(refreshToken);
+//     const currentSession = await findSessionById(decodedToken.sessionId);
+
+//     if (!currentSession || !currentSession.valid) {
+//       throw new Error("Invalid Session");
+//     }
+
+//     const user = await findUserById(currentSession.userId);
+//     if (!user) throw new Error("Invalid User");
+
+//     const userInfo = {
+//       id: user.id,
+//       name: user.name,
+//       email: user.email,
+//       sessionId: currentSession.id,
+//     };
+
+//     const newAccessToken = createAccessToken(userInfo);
+//     const newRefreshToken = createRefreshToken(currentSession.id);
+
+//     return {
+//       newAccessToken,
+//       newRefreshToken,
+//       user: userInfo,
+//     };
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 export const refreshTokens = async (refreshToken) => {
   try {
     const decodedToken = jwtVerifyToken(refreshToken);
+    console.log(decodedToken);
+    
     const currentSession = await findSessionById(decodedToken.sessionId);
+    console.log(currentSession);
+    
 
     if (!currentSession || !currentSession.valid) {
       throw new Error("Invalid Session");
@@ -87,7 +123,7 @@ export const refreshTokens = async (refreshToken) => {
       id: user.id,
       name: user.name,
       email: user.email,
-      sessionId: currentSession.id,
+      sessionId: currentSession.sessionId,
     };
 
     const newAccessToken = createAccessToken(userInfo);
@@ -104,5 +140,5 @@ export const refreshTokens = async (refreshToken) => {
 };
 
 export const clearSession = async (userId) => {
-  return await db.delete(sessionTable).where(eq(sessionTable.id, userId))
-}
+  return await db.delete(sessionTable).where(eq(sessionTable.id, userId));
+};

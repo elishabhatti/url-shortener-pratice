@@ -26,21 +26,23 @@ export const postRegister = async (req, res) => {
     console.log("Choose Another Email Please");
     return res.redirect("/register");
   }
-
+  
   let hashedPassword = await hashPassword(password);
   const user = await createUser({ name, email, password: hashedPassword });
   console.log(user);
-
+  
   return res.redirect("/login");
 };
 
 export const getLoginPage = (req, res) => {
+  if(req.user) return res.redirect("/")
   res.render("auth/login");
 };
 
 export const postLogin = async (req, res) => {
+  if(req.user) return res.redirect("/")
   let { email, password } = req.body;
-
+  
   let [user] = await getUserByEmail(email);
 
   if (!user) {
