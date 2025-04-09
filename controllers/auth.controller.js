@@ -53,12 +53,14 @@ export const postLogin = async (req, res) => {
     ip: req.clientIp,
     userAgent: req.headers["user_agent"],
   });
+
   const accessToken = createAccessToken({
     id: user.id,
     name: user.name,
     email: user.email,
     sessionId: session.id,
   });
+
   const refreshToken = createRefreshToken(session.id);
   const baseConfig = { httpOnly: true, secure: true };
 
@@ -76,7 +78,9 @@ export const postLogin = async (req, res) => {
 };
 
 export const logoutUser = (req, res) => {
-  res.clearCookie("access_token").redirect("/login");
+  res.clearCookie("access_token");
+  res.clearCookie("refresh_token");
+  res.redirect("/login");
 };
 
 export const getMePage = (req, res) => {
