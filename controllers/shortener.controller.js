@@ -79,6 +79,7 @@ export const getUpdateShortCodePageById = async (req, res) => {
 
 export const updateShortCode = async (req, res) => {
   const { id, url, shortCode } = req.body;
+  
   await updatedShortCode({ id, url, shortCode });
   res.redirect("/");
 };

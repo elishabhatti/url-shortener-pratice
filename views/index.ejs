@@ -65,7 +65,6 @@
                   >
                     <span class="font-medium">Short Code:</span>
                     <%= host %>/urls/<%= link.shortCode %>
-                    length <%=  %>
                   </a>
                   <p class="text-sm text-gray-600">
                     <span class="font-medium">URL:</span>
@@ -75,13 +74,13 @@
                 </div>
                 <div class="space-x-2">
                   <a href="/deleteShortCode/<%= link.id %>">
-                    <ion-icon class="text-xl" name="trash-outline"></ion-icon>
+                    <ion-icon class="text-xl " name="trash-outline"></ion-icon>
                   </a>
                   <a href="/getUpdateShortCodePageById/<%= link.id %>">
-                    <ion-icon class="text-xl" name="eyedrop-outline"></ion-icon>
+                    <ion-icon class="text-xl " name="eyedrop-outline"></ion-icon>
                   </a>
                   <a href="/copyShortCode/<%= link.id %>">
-                    <ion-icon class="text-xl" name="copy-outline"></ion-icon>
+                    <ion-icon class="text-xl " name="copy-outline"></ion-icon>
                   </a>
                 </div>
               </div>
