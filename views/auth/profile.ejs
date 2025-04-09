@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Shortener</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body class="text-gray-900">
+    <%- include("../partials/navbar") %>
+    <div class="flex justify-start flex-col items-center p-10">
+      <div class="w-[1000px] rounded-lg">
+      <%- include("../partials/loggedin") %>
+        <div class="bg-blue-500 flex rounded-t-md items-center space-x-4 p-6">
+          <div
+            class="border-2 bg-blue-500 w-[90px] h-[90px] border-white p-6 rounded-full flex items-center text-white justify-center"
+          >
+            <p class="text-5xl">E</p>
+          </div>
+          <div class="text-white">
+            <p class="font-bold uppercase text-xl">Elisha Jameel</p>
+            <p>elishajameel270@gmail.com</p>
+            <p>Member Since</p>
+          </div>
+        </div>
+        <div
+          class="bg-[#F9F9F9] p-6 space-x-4 flex justify-around items-center"
+        >
+          <div class="flex flex-col items-center justify-center">
+            <p>0</p>
+            <p>Link Created</p>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+            <p>0</p>
+            <p>Total Clicks</p>
+          </div>
+          <div class="flex flex-col items-center justify-center">
+            <p>Today</p>
+            <p>Last Active</p>
+          </div>
+        </div>
+        <div>
+          <div class="bg-gray-100 rounded-b-md p-6 space-x-4 flex justify-start items-center">
+            <p>Email Verification:</p>
+            <p class="flex items-center justify-center bg-red-100 text-red-400 px-4 py-2 rounded-full">
+              <ion-icon class="text-2xl mr-2" name="alert-circle-outline"></ion-icon>
+              Not Verified
+            </p>
+            <a
+              href="/verify-email"
+              class="bg-blue-300 flex items-center justify-center px-4 py-2 text-white rounded-full"
+            >
+              <ion-icon class="text-2xl mr-2" name="log-out-outline"></ion-icon>
+              Verify Now
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+</html>

@@ -26,21 +26,21 @@ export const postRegister = async (req, res) => {
     console.log("Choose Another Email Please");
     return res.redirect("/register");
   }
-  
+
   let hashedPassword = await hashPassword(password);
-  const user = await createUser({ name, email, password: hashedPassword });  
+  const user = await createUser({ name, email, password: hashedPassword });
   return res.redirect("/login");
 };
 
 export const getLoginPage = (req, res) => {
-  if(req.user) return res.redirect("/")
+  if (req.user) return res.redirect("/");
   res.render("auth/login");
 };
 
 export const postLogin = async (req, res) => {
-  if(req.user) return res.redirect("/")
+  if (req.user) return res.redirect("/");
   let { email, password } = req.body;
-  
+
   let [user] = await getUserByEmail(email);
 
   if (!user) {
@@ -89,4 +89,8 @@ export const logoutUser = async (req, res) => {
 export const getMePage = (req, res) => {
   if (!req.user) return res.send("Not Logged In");
   return res.send(`${req.user.name} ${req.user.email}`);
+};
+
+export const getProfilePage = (req, res) => {
+  res.render("auth/profile");
 };
