@@ -15,11 +15,15 @@
         action="/addShortCode"
         method="post"
       >
-        <h1 class="text-2xl font-semibold text-center mb-6">Shortened Your URlS Here</h1>
+        <h1 class="text-2xl font-semibold text-center mb-6">
+          Shortened Your URlS Here
+        </h1>
         <div class="flex items-center justify-between">
           <div><%- include("partials/loggedin") %></div>
           <div>
-            <p class="bg-cyan-300 py-2 px-4 rounded-md">Total Shortened Urls: <%= shortCodes.length %></p>
+            <p class="bg-cyan-300 py-2 px-4 rounded-md">
+              Total Shortened Urls: <%= shortCodes.length %>
+            </p>
           </div>
         </div>
 
@@ -39,7 +43,15 @@
           name="shortCode"
           placeholder="Enter Short Code"
         />
-
+        <% if ((errors && errors.length > 0)) { %> <% errors.forEach((error) =>
+        { %>
+        <div
+          class="flex items-center space-x-2 bg-red-400 mt-4 px-4 py-2 rounded-md"
+        >
+          <ion-icon class="text-2xl text-white" name="alert-circle-outline"></ion-icon>
+          <p class="text-white"><%= error %></p>
+        </div>
+        <% }); %> <% } %>
         <button
           type="submit"
           class="mt-5 px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition"
@@ -74,13 +86,13 @@
                 </div>
                 <div class="space-x-2">
                   <a href="/deleteShortCode/<%= link.id %>">
-                    <ion-icon class="text-xl " name="trash-outline"></ion-icon>
+                    <ion-icon class="text-xl" name="trash-outline"></ion-icon>
                   </a>
                   <a href="/getUpdateShortCodePageById/<%= link.id %>">
-                    <ion-icon class="text-xl " name="eyedrop-outline"></ion-icon>
+                    <ion-icon class="text-xl" name="eyedrop-outline"></ion-icon>
                   </a>
                   <a href="/copyShortCode/<%= link.id %>">
-                    <ion-icon class="text-xl " name="copy-outline"></ion-icon>
+                    <ion-icon class="text-xl" name="copy-outline"></ion-icon>
                   </a>
                 </div>
               </div>

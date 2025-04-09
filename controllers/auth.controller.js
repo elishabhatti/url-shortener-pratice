@@ -28,9 +28,7 @@ export const postRegister = async (req, res) => {
   }
   
   let hashedPassword = await hashPassword(password);
-  const user = await createUser({ name, email, password: hashedPassword });
-  console.log(user);
-  
+  const user = await createUser({ name, email, password: hashedPassword });  
   return res.redirect("/login");
 };
 

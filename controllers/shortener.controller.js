@@ -6,6 +6,7 @@ import {
   findShortLinkById,
   updatedShortCode,
   createRandomShortCode,
+  findShortCode,
 } from "../services/shortener.services.js";
 import { jwtVerifyToken } from "../services/auth.services.js";
 
@@ -16,7 +17,12 @@ export const getShortenerPage = async (req, res) => {
     const userId = decodedToken.id;
     let links = await getAllShortLinks(userId);
     let host = req.headers.host;
-    res.render("index", { shortCodes: links, host, userId });
+    res.render("index", {
+      shortCodes: links,
+      host,
+      userId,
+      errors: req.flash("errors"),
+    });
   } catch (error) {
     console.error(error);
   }
@@ -26,10 +32,20 @@ export const postShortCode = async (req, res) => {
   let { url, shortCode } = req.body;
   try {
     let userId = jwtVerifyToken(req.cookies.access_token);
+
+    const shortCodeExists = await findShortCode(shortCode);
     const randomShortCode = createRandomShortCode();
+
+    if (shortCodeExists) {
+      // const errorMessage = error.errors[0].message;
+      req.flash("errors", "Short Code Already Exists");
+      return res.redirect("/");
+    }
+
     if (!shortCode) {
       shortCode = randomShortCode;
     }
+
     await insertShortLink({ url, shortCode, userId: userId.id });
     res.redirect("/");
   } catch (error) {
@@ -79,7 +95,7 @@ export const getUpdateShortCodePageById = async (req, res) => {
 
 export const updateShortCode = async (req, res) => {
   const { id, url, shortCode } = req.body;
-  
+
   await updatedShortCode({ id, url, shortCode });
   res.redirect("/");
 };

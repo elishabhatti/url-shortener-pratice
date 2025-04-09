@@ -106,11 +106,7 @@ export const createRefreshToken = (sessionId) => {
 export const refreshTokens = async (refreshToken) => {
   try {
     const decodedToken = jwtVerifyToken(refreshToken);
-    console.log(decodedToken);
-    
     const currentSession = await findSessionById(decodedToken.sessionId);
-    console.log(currentSession);
-    
 
     if (!currentSession || !currentSession.valid) {
       throw new Error("Invalid Session");
