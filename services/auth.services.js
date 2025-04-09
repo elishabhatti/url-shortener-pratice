@@ -30,11 +30,6 @@ export const comparePassword = async (hash, password) => {
 export const getUserByEmail = async (email) => {
   return await db.select().from(usersTable).where(eq(usersTable.email, email));
 };
-// export const generateToken = ({ id, name, email }) => {
-//   return jwt.sign({ id, name, email }, process.env.JWT_SECRET, {
-//     expiresIn: 60 * 60 * 24 * 30
-//   });
-// };
 
 export const jwtVerifyToken = (token) => {
   return jwt.verify(token, process.env.JWT_SECRET);
@@ -45,7 +40,6 @@ export const createSession = async (userId, { ip, userAgent }) => {
     .insert(sessionTable)
     .values({ userId, ip, userAgent })
     .$returningId();
-
   return session;
 };
 
@@ -56,7 +50,7 @@ export const createAccessToken = ({ id, name, email, sessionId }) => {
 };
 
 export const createRefreshToken = (sessionId) => {
-  return jwt.sign({sessionId }, process.env.JWT_SECRET, {
+  return jwt.sign({ sessionId }, process.env.JWT_SECRET, {
     expiresIn: REFRESH_TOKEN_EXPIRY / MILLISECONDS_PER_SECOND,
   });
 };

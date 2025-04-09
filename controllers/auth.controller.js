@@ -59,7 +59,6 @@ export const postLogin = async (req, res) => {
     email: user.email,
     sessionId: session.id,
   });
-
   const refreshToken = createRefreshToken(session.id);
   const baseConfig = { httpOnly: true, secure: true };
 
