@@ -9,6 +9,7 @@ import {
   findShortCode,
 } from "../services/shortener.services.js";
 import { jwtVerifyToken } from "../services/auth.services.js";
+import { shortenerSchema } from "../validators/shortener.validator.js";
 
 export const getShortenerPage = async (req, res) => {
   if (!req.cookies.access_token) return res.redirect("/login");
@@ -29,29 +30,38 @@ export const getShortenerPage = async (req, res) => {
 };
 
 export const postShortCode = async (req, res) => {
-  let { url, shortCode } = req.body;
+  const parsed = shortenerSchema.safeParse(req.body);
+  console.log(parsed);
+  
+
+  if (!parsed.success) {
+    const errorMessage = parsed.error.errors[0].message;
+    req.flash("errors", errorMessage);
+    return res.redirect("/");
+  }
+
   try {
-    let userId = jwtVerifyToken(req.cookies.access_token);
+    const { url, shortCode } = parsed.data;
+    const userId = jwtVerifyToken(req.cookies.access_token);
 
     const shortCodeExists = await findShortCode(shortCode);
     const randomShortCode = createRandomShortCode();
 
+    let finalShortCode = shortCode || randomShortCode;
+
     if (shortCodeExists) {
-      // const errorMessage = error.errors[0].message;
-      req.flash("errors", "Short Code Already Exists");
+      req.flash("errors", "Short code already exists. Try a different one.");
       return res.redirect("/");
     }
 
-    if (!shortCode) {
-      shortCode = randomShortCode;
-    }
-
-    await insertShortLink({ url, shortCode, userId: userId.id });
+    await insertShortLink({ url, shortCode: finalShortCode, userId: userId.id });
     res.redirect("/");
   } catch (error) {
     console.error(error);
+    res.status(500).send("Internal Server Error");
   }
 };
+
 
 export const redirectToShortLink = async (req, res) => {
   try {
