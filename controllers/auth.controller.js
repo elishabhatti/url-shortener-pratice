@@ -73,7 +73,7 @@ export const getMePage = (req, res) => {
 };
 
 export const getProfilePage = async (req, res) => {
-  if (!req.user) return res.send("Not Logged In");
+  if (!req.user) return res.send("/login");
 
   const user = await findUserById(req.user.id);
   const allUserShortLink = await getAllShortLinks(user.id)
@@ -85,5 +85,15 @@ export const getProfilePage = async (req, res) => {
       links: allUserShortLink,
       isEmailValid: user.isEmailValid
     },
+  });
+};
+
+export const getVerifyEmailPage = async (req, res) => {
+  if (!req.user) return res.redirect("/login");
+
+  const user = await findUserById(req.user.id);
+  if(!user || user.isEmailValid) return res.redirect("/verify-email")
+  res.render("auth/verify-email", {
+      email: user.email,
   });
 };
