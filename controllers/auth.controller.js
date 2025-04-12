@@ -8,6 +8,7 @@ import {
   findUserById,
   generateRandomToken,
   insertVerificationEmailToken,
+  createVerifyEmailLink,
 } from "../services/auth.services.js";
 import { getAllShortLinks } from "../services/shortener.services.js";
 
@@ -101,8 +102,11 @@ export const resendVerificationLink = async (req, res) => {
     userId: req.user.id,
     token: randomToken,
   });
-  
-  console.log(randomToken);
+
+  const verifyEmailLink = await createVerifyEmailLink({
+    email: req.user.email,
+    token: randomToken,
+  });
 
   res.redirect("/verify-email");
 };

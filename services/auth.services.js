@@ -154,3 +154,8 @@ export const insertVerificationEmailToken = async ({ userId, token }) => {
     .where(eq(lt(verifyEmailTokensTable.expiresAt, sql`CURRENT_TIMESTAMP`)));
   return await db.insert(verifyEmailTokensTable).values({ userId, token });
 };
+
+export const createVerifyEmailLink = async ({ email, token }) => {
+  const uriEncodedEmail = encodeURIComponent(email);
+  return `${process.env.FRONTEND_URL}/verify-email-token?token=${token}&email=${uriEncodedEmail}`;
+};
