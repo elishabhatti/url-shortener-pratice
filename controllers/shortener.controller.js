@@ -30,9 +30,7 @@ export const getShortenerPage = async (req, res) => {
 };
 
 export const postShortCode = async (req, res) => {
-  const parsed = shortenerSchema.safeParse(req.body);
-  console.log(parsed);
-  
+  const parsed = shortenerSchema.safeParse(req.body);  
 
   if (!parsed.success) {
     const errorMessage = parsed.error.errors[0].message;
