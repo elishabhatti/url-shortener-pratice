@@ -11,6 +11,7 @@ import {
   createAccessToken,
   createRefreshToken,
   clearSession,
+  authenticateUser,
 } from "../services/auth.services.js";
 
 export const getRegisterPage = async (req, res) => {
@@ -29,7 +30,9 @@ export const postRegister = async (req, res) => {
 
   let hashedPassword = await hashPassword(password);
   const user = await createUser({ name, email, password: hashedPassword });
-  return res.redirect("/login");
+
+  await authenticateUser(req, res, user);
+  return res.redirect("/");
 };
 
 export const getLoginPage = (req, res) => {
@@ -49,31 +52,7 @@ export const postLogin = async (req, res) => {
   }
   const isPasswordValid = await comparePassword(user.password, password);
   if (!isPasswordValid) return res.redirect("/login");
-
-  const session = await createSession(user.id, {
-    ip: req.clientIp,
-    userAgent: req.headers["user_agent"],
-  });
-
-  const accessToken = createAccessToken({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    sessionId: session.id,
-  });
-
-  const refreshToken = createRefreshToken(session.id);
-  const baseConfig = { httpOnly: true, secure: true };
-
-  res.cookie("access_token", accessToken, {
-    ...baseConfig,
-    maxAge: ACCESS_TOKEN_EXPIRY,
-  });
-
-  res.cookie("refresh_token", refreshToken, {
-    ...baseConfig,
-    maxAge: REFRESH_TOKEN_EXPIRY,
-  });
+  await authenticateUser(req, res, user);
 
   return res.redirect("/");
 };
