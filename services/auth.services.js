@@ -5,7 +5,7 @@ import {
   verifyEmailTokensTable,
 } from "../drizzle/schema.js";
 import argon2 from "argon2";
-import { eq } from "drizzle-orm";
+import { eq, lt, sql } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 import {
   ACCESS_TOKEN_EXPIRY,
@@ -149,6 +149,8 @@ export const generateRandomToken = (digit = 8) => {
 };
 
 export const insertVerificationEmailToken = async ({ userId, token }) => {
-  
+  await db
+    .delete(verifyEmailTokensTable)
+    .where(eq(lt(verifyEmailTokensTable.expiresAt, sql`CURRENT_TIMESTAMP`)));
   return await db.insert(verifyEmailTokensTable).values({ userId, token });
 };
