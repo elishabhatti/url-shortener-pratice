@@ -12,7 +12,9 @@ import {
   createRefreshToken,
   clearSession,
   authenticateUser,
+  findUserById,
 } from "../services/auth.services.js";
+import { getAllShortLinks } from "../services/shortener.services.js";
 
 export const getRegisterPage = async (req, res) => {
   res.render("auth/register");
@@ -70,6 +72,17 @@ export const getMePage = (req, res) => {
   return res.send(`${req.user.name} ${req.user.email}`);
 };
 
-export const getProfilePage = (req, res) => {
-  res.render("auth/profile");
+export const getProfilePage = async (req, res) => {
+  if (!req.user) return res.send("Not Logged In");
+
+  const user = await findUserById(req.user.id);
+  const allUserShortLink = await getAllShortLinks(user.id)
+  res.render("auth/profile", {
+    user: {
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+      links: allUserShortLink,
+    },
+  });
 };

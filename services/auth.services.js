@@ -71,38 +71,6 @@ export const createRefreshToken = (sessionId) => {
   });
 };
 
-// export const refreshTokens = async (refreshToken) => {
-//   try {
-//     const decodedToken = jwtVerifyToken(refreshToken);
-//     const currentSession = await findSessionById(decodedToken.sessionId);
-
-//     if (!currentSession || !currentSession.valid) {
-//       throw new Error("Invalid Session");
-//     }
-
-//     const user = await findUserById(currentSession.userId);
-//     if (!user) throw new Error("Invalid User");
-
-//     const userInfo = {
-//       id: user.id,
-//       name: user.name,
-//       email: user.email,
-//       sessionId: currentSession.id,
-//     };
-
-//     const newAccessToken = createAccessToken(userInfo);
-//     const newRefreshToken = createRefreshToken(currentSession.id);
-
-//     return {
-//       newAccessToken,
-//       newRefreshToken,
-//       user: userInfo,
-//     };
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 export const refreshTokens = async (refreshToken) => {
   try {
     const decodedToken = jwtVerifyToken(refreshToken);

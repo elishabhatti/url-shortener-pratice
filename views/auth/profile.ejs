@@ -3,32 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>URL Shortener</title>
+    <title>User Profile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body class="text-gray-900">
     <%- include("../partials/navbar") %>
     <div class="flex justify-start flex-col items-center p-10">
-      <div class="w-[1000px] rounded-lg">
       <%- include("../partials/loggedin") %>
-        <div class="bg-blue-500 flex rounded-t-md items-center space-x-4 p-6">
+      <div class="w-[1000px] rounded-lg border border-black">
+        <div class="flex rounded-t-md items-center space-x-4 p-6">
           <div
-            class="border-2 bg-blue-500 w-[90px] h-[90px] border-white p-6 rounded-full flex items-center text-white justify-center"
+            class="border-2 border-black w-[90px] h-[90px]  p-6 rounded-full flex items-center justify-center"
           >
-            <p class="text-5xl">E</p>
+            <p class="text-5xl"><%= user.name.charAt(0).toUpperCase() %></p>
           </div>
-          <div class="text-white">
-            <p class="font-bold uppercase text-xl">Elisha Jameel</p>
-            <p>elishajameel270@gmail.com</p>
-            <p>Member Since</p>
+          <div class="">
+            <p class="font-bold uppercase text-2xl"><%= user.name %></p>
+            <p><%= user.email %></p>
+            <p class="">
+              Member since <%= new
+              Date(user.createdAt).toLocaleDateString() %>
+            </p>
           </div>
         </div>
+        <hr>
         <div
-          class="bg-[#F9F9F9] p-6 space-x-4 flex justify-around items-center"
+          class="p-6 space-x-4 flex justify-around items-center"
         >
           <div class="flex flex-col items-center justify-center">
-            <p>0</p>
+            <p><%= user.links.length  %></p>
             <p>Link Created</p>
           </div>
           <div class="flex flex-col items-center justify-center">
@@ -41,21 +45,32 @@
           </div>
         </div>
         <div>
-          <div class="bg-gray-100 rounded-b-md p-6 space-x-4 flex justify-start items-center">
+        <hr>
+
+          <div class="rounded-b-md p-6 space-x-4 flex justify-start items-center">
             <p>Email Verification:</p>
-            <p class="flex items-center justify-center bg-red-100 text-red-400 px-4 py-2 rounded-full">
-              <ion-icon class="text-2xl mr-2" name="alert-circle-outline"></ion-icon>
+            <p class="flex items-center justify-center text-white bg-black px-4 py-2 rounded-full">
+              <ion-icon class="text-white text-2xl mr-2" name="alert-circle-outline"></ion-icon>
               Not Verified
             </p>
             <a
               href="/verify-email"
-              class="bg-blue-300 flex items-center justify-center px-4 py-2 text-white rounded-full"
+              class="flex items-center justify-center px-4 py-2 border border-black rounded-full"
             >
               <ion-icon class="text-2xl mr-2" name="log-out-outline"></ion-icon>
               Verify Now
             </a>
           </div>
         </div>
+        <hr>
+        <div class="px-5">
+          <h1>User Changes</h1>
+        </div>
+        <div class="flex p-5 justify-around items-center w-full">
+          <div class="bg-black text-white px-4 py-2 rounded-full">Change Password</div>
+          <div class="bg-black text-white px-4 py-2 rounded-full">Edit Profile</div>
+          <div class="bg-black text-white px-4 py-2 rounded-full">Logout</div>
+      </div>
       </div>
     </div>
     <script
