@@ -47,31 +47,31 @@
         <div>
         <hr>
 
-          <div class="rounded-b-md p-6 space-x-4 flex justify-start items-center">
-            <p>Email Verification:</p>
-            <p class="flex items-center justify-center text-white bg-black px-4 py-2 rounded-full">
-              <ion-icon class="text-white text-2xl mr-2" name="alert-circle-outline"></ion-icon>
+        <div class=" p-5 space-x-4">
+          <p>
+            <span class="verification-label">Email Verification:</span>
+            <% if (user.isEmailValid) { %>
+            <span class="bg-black ml-4 text-white px-6 py-2 rounded-full">
+               Verified
+            </span>
+            <% } else { %>
+            <span class="bg-black text-white px-6 py-2 rounded-full">
               Not Verified
-            </p>
-            <a
-              href="/verify-email"
-              class="flex items-center justify-center px-4 py-2 border border-black rounded-full"
-            >
-              <ion-icon class="text-2xl mr-2" name="log-out-outline"></ion-icon>
+            </span>
+            <a href="/verify-email" class="border border-black ml-4 px-6 py-2 rounded-full">
               Verify Now
             </a>
-          </div>
+            <% } %>
+          </p>
+        </div>
         </div>
         <hr>
-        <div class="px-5">
-          <h1>User Changes</h1>
-        </div>
-        <div class="flex p-5 justify-around items-center w-full">
-          <div class="bg-black text-white px-4 py-2 rounded-full">Change Password</div>
-          <div class="bg-black text-white px-4 py-2 rounded-full">Edit Profile</div>
-          <div class="bg-black text-white px-4 py-2 rounded-full">Logout</div>
       </div>
-      </div>
+      <div class="flex p-5 justify-center space-x-12 items-center w-full">
+        <div class="border border-black px-4 py-2 rounded-full">Change Password</div>
+        <div class="border border-black px-4 py-2 rounded-full">Edit Profile</div>
+        <div class="border border-black px-4 py-2 rounded-full">Logout</div>
+    </div>
     </div>
     <script
       type="module"

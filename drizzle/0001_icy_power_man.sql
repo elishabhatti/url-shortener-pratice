@@ -1,1 +1,0 @@
-ALTER TABLE `short_link` MODIFY COLUMN `url` varchar(2000) NOT NULL;

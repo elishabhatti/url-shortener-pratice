@@ -83,6 +83,7 @@ export const getProfilePage = async (req, res) => {
       email: user.email,
       createdAt: user.createdAt,
       links: allUserShortLink,
+      isEmailValid: user.isEmailValid
     },
   });
 };

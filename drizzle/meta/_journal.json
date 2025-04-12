@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1743848448262,
-      "tag": "0000_sturdy_serpent_society",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1744022290035,
-      "tag": "0001_icy_power_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1744109426781,
-      "tag": "0002_happy_toad",
+      "when": 1744443079840,
+      "tag": "0000_cheerful_marten_broadcloak",
       "breakpoints": true
     }
   ]

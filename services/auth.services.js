@@ -87,6 +87,7 @@ export const refreshTokens = async (refreshToken) => {
       id: user.id,
       name: user.name,
       email: user.email,
+      isEmailValid: user.isEmailValid,
       sessionId: currentSession.sessionId,
     };
 
@@ -117,6 +118,7 @@ export const authenticateUser = async (req, res, user) => {
     id: user.id,
     name: user.name,
     email: user.email,
+    isEmailValid: false,
     sessionId: session.id,
   });
 
@@ -132,4 +134,4 @@ export const authenticateUser = async (req, res, user) => {
     ...baseConfig,
     maxAge: REFRESH_TOKEN_EXPIRY,
   });
-}
+};
