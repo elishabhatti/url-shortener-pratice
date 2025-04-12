@@ -1,5 +1,9 @@
 import { db } from "../config/db.config.js";
-import { sessionTable, usersTable } from "../drizzle/schema.js";
+import {
+  sessionTable,
+  usersTable,
+  verifyEmailTokensTable,
+} from "../drizzle/schema.js";
 import argon2 from "argon2";
 import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
@@ -8,6 +12,7 @@ import {
   MILLISECONDS_PER_SECOND,
   REFRESH_TOKEN_EXPIRY,
 } from "../config/constants.js";
+import crypto from "crypto";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -134,4 +139,16 @@ export const authenticateUser = async (req, res, user) => {
     ...baseConfig,
     maxAge: REFRESH_TOKEN_EXPIRY,
   });
+};
+
+export const generateRandomToken = (digit = 8) => {
+  const min = 10 ** (digit - 1);
+  const max = 10 ** digit;
+
+  return crypto.randomInt(min, max).toString();
+};
+
+export const insertVerificationEmailToken = async ({ userId, token }) => {
+  
+  return await db.insert(verifyEmailTokensTable).values({ userId, token });
 };

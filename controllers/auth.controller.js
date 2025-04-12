@@ -1,18 +1,13 @@
 import {
-  ACCESS_TOKEN_EXPIRY,
-  REFRESH_TOKEN_EXPIRY,
-} from "../config/constants.js";
-import {
   createUser,
   hashPassword,
   getUserByEmail,
   comparePassword,
-  createSession,
-  createAccessToken,
-  createRefreshToken,
   clearSession,
   authenticateUser,
   findUserById,
+  generateRandomToken,
+  insertVerificationEmailToken,
 } from "../services/auth.services.js";
 import { getAllShortLinks } from "../services/shortener.services.js";
 
@@ -76,14 +71,14 @@ export const getProfilePage = async (req, res) => {
   if (!req.user) return res.send("/login");
 
   const user = await findUserById(req.user.id);
-  const allUserShortLink = await getAllShortLinks(user.id)
+  const allUserShortLink = await getAllShortLinks(user.id);
   res.render("auth/profile", {
     user: {
       name: user.name,
       email: user.email,
       createdAt: user.createdAt,
       links: allUserShortLink,
-      isEmailValid: user.isEmailValid
+      isEmailValid: user.isEmailValid,
     },
   });
 };
@@ -92,8 +87,22 @@ export const getVerifyEmailPage = async (req, res) => {
   if (!req.user) return res.redirect("/login");
 
   const user = await findUserById(req.user.id);
-  if(!user || user.isEmailValid) return res.redirect("/verify-email")
+  if (!user || user.isEmailValid) return res.redirect("/verify-email");
   res.render("auth/verify-email", {
-      email: user.email,
+    email: user.email,
   });
+};
+
+export const resendVerificationLink = async (req, res) => {
+  if (!req.user) return res.redirect("/login");
+
+  const randomToken = generateRandomToken();
+  await insertVerificationEmailToken({
+    userId: req.user.id,
+    token: randomToken,
+  });
+  
+  console.log(randomToken);
+
+  res.redirect("/verify-email");
 };
