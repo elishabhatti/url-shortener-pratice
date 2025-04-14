@@ -155,6 +155,10 @@ export const insertVerificationEmailToken = async ({ userId, token }) => {
         .delete(verifyEmailTokensTable)
         .where(lt(verifyEmailTokensTable.expiresAt, sql`CURRENT_TIMESTAMP`));
 
+      await tx
+        .delete(verifyEmailTokensTable)
+        .where(eq(verifyEmailTokensTable.userId, userId));
+
       return await tx.insert(verifyEmailTokensTable).values({ userId, token });
     } catch (error) {
       console.error(error);
