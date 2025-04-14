@@ -5,7 +5,7 @@ import {
   verifyEmailTokensTable,
 } from "../drizzle/schema.js";
 import argon2 from "argon2";
-import { eq, lt, sql } from "drizzle-orm";
+import { and, gte, eq, lt, sql } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 import {
   ACCESS_TOKEN_EXPIRY,
@@ -167,12 +167,64 @@ export const insertVerificationEmailToken = async ({ userId, token }) => {
 };
 
 export const createVerifyEmailLink = async ({ email, token }) => {
-  // const uriEncodedEmail = encodeURIComp onent(email);
-  // return `${process.env.FRONTEND_URL}/verify-email-token?token=${token}&email=${uriEncodedEmail}`;
-
   const url = new URL(`${process.env.FRONTEND_URL}/verify-email-token`);
   url.searchParams.append("token", token);
   url.searchParams.append("email", email);
 
-  return url.toString()
+  return url.toString();
+};
+
+export const findVerificationEmailToken = async ({ token, email }) => {
+  const tokenData = await db
+    .select({
+      userId: verifyEmailTokensTable.userId,
+      token: verifyEmailTokensTable.token,
+      expiresAt: verifyEmailTokensTable.expiresAt,
+    })
+    .from(verifyEmailTokensTable)
+    .where(
+      and(
+        eq(verifyEmailTokensTable.token, token),
+        gte(verifyEmailTokensTable.expiresAt, sql`CURRENT_TIMESTAMP`)
+      )
+    );
+
+  if (!tokenData.length) return null;
+
+  const { userId } = tokenData[0];
+
+  const userData = await db
+    .select({
+      userId: usersTable.id,
+      email: usersTable.email,
+    })
+    .from(usersTable)
+    .where(eq(usersTable.id, userId));
+
+  if (!userData.length) return null;
+
+  return {
+    userId: userData[0].userId,
+    email: userData[0].email,
+    token: tokenData[0].token,
+    expiresAt: tokenData[0].expiresAt,
+  };
+};
+
+export const verifyUserEmailAndUpdate = async (email) => {
+  return db
+    .update(usersTable)
+    .set({ isEmailValid: true })
+    .where(eq(usersTable.email, email));
+};
+
+export const clearVerifyEmailTokens = async (email) => {
+  const [user] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.email, email));
+
+  return await db
+    .delete(verifyEmailTokensTable)
+    .where(eq(verifyEmailTokensTable.userId, user.id));
 };

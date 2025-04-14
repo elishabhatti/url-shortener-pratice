@@ -10,8 +10,11 @@ import {
   generateRandomToken,
   insertVerificationEmailToken,
   createVerifyEmailLink,
+  findVerificationEmailToken,
+  verifyUserEmailAndUpdate,
 } from "../services/auth.services.js";
 import { getAllShortLinks } from "../services/shortener.services.js";
+import { verifyEmailSchema } from "../validators/auth.validator.js";
 
 export const getRegisterPage = async (req, res) => {
   res.render("auth/register");
@@ -114,14 +117,27 @@ export const resendVerificationLink = async (req, res) => {
       to: req.user.email,
       subject: "VERIFY YOUR EMAIL",
       html: `
-    <h1>Click the link below to verify your email</h1>
-    <p>You can use this token: <code>${randomToken}</code></p>
-    <a href="${verifyEmailLink}">Verify Email</a> 
-    `,
+        <h1>Click the link below to verify your email</h1>
+        <p>You can use this token: <code>${randomToken}</code></p>
+        <a href="${verifyEmailLink}">Verify Email</a> 
+       `,
     }).catch((error) => console.error(error));
 
     res.redirect("/verify-email");
   } catch (error) {
     console.error(error);
   }
+};
+
+export const verifyEmailToken = async (req, res) => {
+  const { data, error } = verifyEmailSchema.safeParse(req.query);
+
+  if (error) return res.send("Verification link invalid or expired");
+
+  const token = await findVerificationEmailToken(data);
+  if (!token) return res.send("Verification link invalid or expired");
+
+  await verifyUserEmailAndUpdate(token.email);
+  console.log("Verify Email Token:", token);
+  res.redirect("/profile")
 };
