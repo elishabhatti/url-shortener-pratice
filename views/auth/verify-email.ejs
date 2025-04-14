@@ -22,16 +22,24 @@
           entering the 8-digit code or request a new verification link.
         </p>
         <form action="/resend-verification-link" method="post">
-          <button type="submit" class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
+          <button
+            type="submit"
+            class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
+          >
             Resend Verification Link
           </button>
         </form>
       </div>
 
-      <div class="w-[500px] border border-black rounded-md bg-whiterounded-md p-5 mt-10">
+      <div
+        class="w-[500px] border border-black text-lg rounded-md bg-whiterounded-md p-5 mt-5"
+      >
         <form action="/verify-email-token" method="get">
           <div class="mb-4">
-            <label for="token" class="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              for="token"
+              class="block text-lg font-medium text-gray-700 mb-1"
+            >
               Enter 8-Digit Verification Code:
             </label>
             <input
@@ -48,7 +56,10 @@
 
           <input type="hidden" value="<%= email %>" name="email" />
 
-          <button type="submit" class="bg-black text-white px-4 py-2 rounded hover:bg-blue-700">
+          <button
+            type="submit"
+            class="bg-black text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
             Verify Code
           </button>
         </form>
