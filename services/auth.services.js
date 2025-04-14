@@ -149,10 +149,15 @@ export const generateRandomToken = (digit = 8) => {
 };
 
 export const insertVerificationEmailToken = async ({ userId, token }) => {
-  await db
-    .delete(verifyEmailTokensTable)
-    .where(eq(lt(verifyEmailTokensTable.expiresAt, sql`CURRENT_TIMESTAMP`)));
-  return await db.insert(verifyEmailTokensTable).values({ userId, token });
+  try {
+    await db
+      .delete(verifyEmailTokensTable)
+      .where(lt(verifyEmailTokensTable.expiresAt, sql`CURRENT_TIMESTAMP`));
+
+    return await db.insert(verifyEmailTokensTable).values({ userId, token });
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const createVerifyEmailLink = async ({ email, token }) => {
