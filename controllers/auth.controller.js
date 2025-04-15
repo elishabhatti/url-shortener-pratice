@@ -122,6 +122,8 @@ export const resendVerificationLink = async (req, res) => {
         <a href="${verifyEmailLink}">Verify Email</a>
        `,
     }).catch((error) => console.error(error));
+
+    res.redirect("/profile");
   } catch (error) {
     console.error(error);
   }
@@ -132,10 +134,9 @@ export const verifyEmailToken = async (req, res) => {
 
   if (error) return res.send("Verification link invalid or expired");
 
-  const token = await findVerificationEmailToken(data);
+  const [token] = await findVerificationEmailToken(data);
   if (!token) return res.send("Verification link invalid or expired");
 
   await verifyUserEmailAndUpdate(token.email);
-  console.log("Verify Email Token:", token);
   res.redirect("/profile");
 };
