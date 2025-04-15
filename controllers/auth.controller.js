@@ -101,11 +101,11 @@ export const getVerifyEmailPage = async (req, res) => {
 export const resendVerificationLink = async (req, res) => {
   try {
     if (!req.user) return res.redirect("/login");
-
     const randomToken = generateRandomToken();
+    console.log(randomToken);
     await insertVerificationEmailToken({
-      userId: req.user.id,
       token: randomToken,
+      userId: req.user.id,
     });
 
     const verifyEmailLink = await createVerifyEmailLink({
@@ -119,11 +119,9 @@ export const resendVerificationLink = async (req, res) => {
       html: `
         <h1>Click the link below to verify your email</h1>
         <p>You can use this token: <code>${randomToken}</code></p>
-        <a href="${verifyEmailLink}">Verify Email</a> 
+        <a href="${verifyEmailLink}">Verify Email</a>
        `,
     }).catch((error) => console.error(error));
-
-    res.redirect("/verify-email");
   } catch (error) {
     console.error(error);
   }
@@ -139,5 +137,5 @@ export const verifyEmailToken = async (req, res) => {
 
   await verifyUserEmailAndUpdate(token.email);
   console.log("Verify Email Token:", token);
-  res.redirect("/profile")
+  res.redirect("/profile");
 };
