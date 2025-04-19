@@ -233,6 +233,7 @@ export const findVerificationEmailToken = async ({ token, email }) => {
     console.error(error);
   }
 };
+
 export const verifyUserEmailAndUpdate = async (email) => {
   return db
     .update(usersTable)
