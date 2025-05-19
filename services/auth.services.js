@@ -1,5 +1,6 @@
 import { db } from "../config/db.config.js";
 import {
+  oauthAccountsTable,
   sessionTable,
   usersTable,
   verifyEmailTokensTable,
@@ -112,17 +113,17 @@ export const refreshTokens = async (refreshToken) => {
 export const clearSession = async (userId) => {
   return await db.delete(sessionTable).where(eq(sessionTable.id, userId));
 };
-
-export const authenticateUser = async (req, res, user) => {
+export const authenticateUser = async ({ req, res, user, name, email }) => {
   const session = await createSession(user.id, {
     ip: req.clientIp,
-    userAgent: req.headers["user_agent"],
+    userAgent: req.headers["user-agent"],
   });
+  console.log("user id", user.id);
 
   const accessToken = createAccessToken({
     id: user.id,
-    name: user.name,
-    email: user.email,
+    name,
+    email,
     isEmailValid: false,
     sessionId: session.id,
   });
@@ -140,6 +141,7 @@ export const authenticateUser = async (req, res, user) => {
     maxAge: REFRESH_TOKEN_EXPIRY,
   });
 };
+
 
 export const generateRandomToken = (digit = 8) => {
   const min = 10 ** (digit - 1);
@@ -250,4 +252,74 @@ export const clearVerifyEmailTokens = async (email) => {
   return await db
     .delete(verifyEmailTokensTable)
     .where(eq(verifyEmailTokensTable.userId, user.id));
+};
+
+export const getUserWithOauthId = async ({ email, provider }) => {
+  const [user] = await db
+    .select({
+      id: usersTable.id,
+      name: usersTable.name,
+      email: usersTable.email,
+      isEmailValid: usersTable.isEmailValid,
+      provideAccountId: oauthAccountsTable.providerAccountId,
+      provider: oauthAccountsTable.provider,
+    })
+    .from(usersTable)
+    .where(eq(usersTable.email, email))
+    .leftJoin(
+      oauthAccountsTable,
+      and(
+        eq(oauthAccountsTable.provider, provider),
+        eq(oauthAccountsTable.userId, usersTable.id)
+      )
+    );
+
+  return user;
+};
+
+export const linkUserWithOauth = async ({
+  userId,
+  provider,
+  providerAccountId, // <-- FIX the spelling here
+}) => {
+  await db.insert(oauthAccountsTable).values({
+    userId,
+    provider,
+    providerAccountId,
+  });
+};
+
+export const createUserWithOauth = async ({
+  name,
+  email,
+  provider,
+  providerAccountId,
+}) => {
+  const user = await db.transaction(async (trx) => {
+    const [user] = await trx
+      .insert(usersTable)
+      .values({
+        email,
+        name,
+        // password,
+        isEmailValid: true,
+      })
+      .$returningId();
+
+    await trx.insert(oauthAccountsTable).values({
+      provider,
+      providerAccountId,
+      userId: user.id,
+    });
+
+    return {
+      id: user.id,
+      name,
+      email,
+      isEmailValid: true,
+      provider,
+      providerAccountId,
+    };
+  });
+  return user;
 };

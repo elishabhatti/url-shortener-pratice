@@ -5,7 +5,8 @@ import {
   mysqlTable,
   timestamp,
   varchar,
-  text
+  text,
+  mysqlEnum
 } from "drizzle-orm/mysql-core";
 
 export const shortLink = mysqlTable("short_link", {
@@ -23,7 +24,7 @@ export const usersTable = mysqlTable("users", {
   id: int().autoincrement().primaryKey(),
   name: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
-  password: varchar({ length: 255 }).notNull(),
+  password: varchar({ length: 255 }),
   isEmailValid: boolean("is_email_valid").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
@@ -71,3 +72,15 @@ export const sessionsRelation = relations(sessionTable, ({ one }) => ({
     references: [usersTable.id],
   }),
 }));
+
+export const oauthAccountsTable = mysqlTable("oauth_accounts", {
+  id: int().autoincrement().primaryKey(),
+  userId: int("user_id")
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  provider: mysqlEnum("provider", ["google", "github"]).notNull(),
+  providerAccountId: varchar("provider_account_id", { length: 255 })
+    .notNull()
+    .unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});

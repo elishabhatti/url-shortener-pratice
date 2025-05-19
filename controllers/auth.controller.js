@@ -1,3 +1,4 @@
+import { decodeIdToken, generateCodeVerifier, generateState } from "arctic";
 import { sendEmail } from "../lib/nodemailer.js";
 import {
   createUser,
@@ -12,9 +13,14 @@ import {
   createVerifyEmailLink,
   findVerificationEmailToken,
   verifyUserEmailAndUpdate,
+  getUserWithOauthId,
+  createUserWithOauth,
+  linkUserWithOauth,
 } from "../services/auth.services.js";
 import { getAllShortLinks } from "../services/shortener.services.js";
 import { verifyEmailSchema } from "../validators/auth.validator.js";
+import { google } from "../lib/oauth/google.js";
+import { OAUTH_EXCHANGE_EXPIRAY } from "../config/constants.js";
 
 export const getRegisterPage = async (req, res) => {
   res.render("auth/register");
@@ -139,4 +145,125 @@ export const verifyEmailToken = async (req, res) => {
 
   await verifyUserEmailAndUpdate(token.email);
   res.redirect("/profile");
+};
+
+export const getGoogleLoginPage = (req, res) => {
+  if (req.user) return res.redirect("/");
+
+  try {
+    const state = generateState();
+    const codeVerifier = generateCodeVerifier();
+    const url = google.createAuthorizationURL(state, codeVerifier, [
+      "openid",
+      "profile",
+      "email",
+    ]);
+
+    const cookieConfig = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: OAUTH_EXCHANGE_EXPIRAY,
+      sameSite: "lax",
+    };
+
+    res.cookie("google_oauth_state", state, cookieConfig);
+    res.cookie("google_oauth_verifier", codeVerifier, cookieConfig);
+
+    res.redirect(url.toString());
+  } catch (error) {
+    console.error(`Error from get login with google page ${error}`);
+  }
+};
+
+export const getGoogleLoginCallback = async (req, res) => {
+  const { code, state } = req.query;
+  const {
+    google_oauth_state: storeState,
+    google_oauth_verifier: codeVerifier,
+  } = req.cookies;
+
+  console.log("Received from Google:", { code, state });
+  console.log("Stored cookies:", { storeState, codeVerifier });
+
+  // Validate state and verifier
+  if (!code || !state || !storeState || !codeVerifier || state !== storeState) {
+    req.flash(
+      "errors",
+      "Couldn't login with Google due to an invalid login attempt. Please try again."
+    );
+    return res.redirect("/login");
+  }
+
+  // Exchange code for tokens
+  let tokens;
+  try {
+    tokens = await google.validateAuthorizationCode(code, codeVerifier);
+  } catch (error) {
+    console.error("Google token exchange failed:", error);
+    req.flash(
+      "errors",
+      "Couldn't login with Google due to an invalid login attempt. Please try again."
+    );
+    return res.redirect("/login");
+  }
+
+  console.log("Google tokens:", tokens);
+
+  const claims = decodeIdToken(tokens.idToken());
+  console.log("Google ID token claims:", claims);
+
+  const { sub: googleUserId, name, email, picture } = claims;
+
+  // Check if user already exists by OAuth link
+  let user = await getUserWithOauthId({
+    provider: "google",
+    email,
+  });
+
+  // If user exists but not linked, link it
+  if (user && !user.provideAccountId) {
+    await linkUserWithOauth({
+      userId: user.id,
+      provider: "google",
+      providerAccountId: googleUserId,
+    });
+  }
+
+  // If user doesn't exist at all, create a new one via OAuth
+  if (!user) {
+    user = await createUserWithOauth({
+      name,
+      email,
+      provider: "google",
+      providerAccountId: googleUserId,
+    });
+  }
+
+  // Check (again) by email
+  let userByEmail = await getUserByEmail(email);
+
+  // 🛠 Fix: make sure it's not an array
+  if (Array.isArray(userByEmail)) {
+    userByEmail = userByEmail[0];
+  }
+
+  // If still not found by email, create a regular user
+  if (!userByEmail) {
+    userByEmail = await createUser({
+      name,
+      email,
+      profilePicture: picture,
+    });
+  }
+
+  // Authenticate and login
+  await authenticateUser({
+    req,
+    res,
+    user: userByEmail,
+    name,
+    email,
+  });
+
+  res.redirect("/");
 };

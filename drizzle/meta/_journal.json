@@ -15,6 +15,20 @@
       "when": 1744445753528,
       "tag": "0001_cuddly_morlun",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1747648888866,
+      "tag": "0002_young_screwball",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1747650083238,
+      "tag": "0003_conscious_jackal",
+      "breakpoints": true
     }
   ]
 }

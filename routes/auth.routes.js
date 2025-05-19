@@ -10,6 +10,8 @@ import {
   getVerifyEmailPage,
   verifyEmailToken,
   resendVerificationLink,
+  getGoogleLoginPage,
+  getGoogleLoginCallback,
 } from "../controllers/auth.controller.js";
 
 export const authRouter = Router();
@@ -22,3 +24,5 @@ authRouter.route("/resend-verification-link").post(resendVerificationLink);
 authRouter.route("/verify-email-token").get(verifyEmailToken);
 authRouter.route("/me").get(getMePage);
 authRouter.route("/logout").get(logoutUser);
+authRouter.route("/google").get(getGoogleLoginPage);
+authRouter.route("/google/callback").get(getGoogleLoginCallback)
