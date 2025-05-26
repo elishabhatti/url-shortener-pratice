@@ -10,6 +10,7 @@ import {
 } from "../services/shortener.services.js";
 import { jwtVerifyToken } from "../services/auth.services.js";
 import { shortenerSchema } from "../validators/shortener.validator.js";
+import { sendEmails } from "../lib/resend-email.js";
 
 export const getShortenerPage = async (req, res) => {
   if (!req.cookies.access_token) return res.redirect("/login");
@@ -22,6 +23,7 @@ export const getShortenerPage = async (req, res) => {
       shortCodes: links,
       host,
       userId,
+      sendEmails,
       errors: req.flash("errors"),
     });
   } catch (error) {
@@ -30,7 +32,7 @@ export const getShortenerPage = async (req, res) => {
 };
 
 export const postShortCode = async (req, res) => {
-  const parsed = shortenerSchema.safeParse(req.body);  
+  const parsed = shortenerSchema.safeParse(req.body);
 
   if (!parsed.success) {
     const errorMessage = parsed.error.errors[0].message;
@@ -52,14 +54,17 @@ export const postShortCode = async (req, res) => {
       return res.redirect("/");
     }
 
-    await insertShortLink({ url, shortCode: finalShortCode, userId: userId.id });
+    await insertShortLink({
+      url,
+      shortCode: finalShortCode,
+      userId: userId.id,
+    });
     res.redirect("/");
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
-
 
 export const redirectToShortLink = async (req, res) => {
   try {
