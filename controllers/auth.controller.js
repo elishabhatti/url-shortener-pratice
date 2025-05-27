@@ -108,18 +108,22 @@ export const getVerifyEmailPage = async (req, res) => {
 export const resendVerificationLink = async (req, res) => {
   try {
     if (!req.user) return res.redirect("/login");
+
+    // generate token
     const randomToken = generateRandomToken();
-    console.log(randomToken);
+    // insert email verification token and userid
     await insertVerificationEmailToken({
       token: randomToken,
       userId: req.user.id,
     });
 
+    // create link when click to verify
     const verifyEmailLink = await createVerifyEmailLink({
       email: req.user.email,
       token: randomToken,
     });
 
+    // send email to the user
     sendEmails({
       to: req.user.email,
       subject: "VERIFY YOUR EMAIL",
