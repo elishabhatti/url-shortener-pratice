@@ -21,6 +21,7 @@ import { getAllShortLinks } from "../services/shortener.services.js";
 import { verifyEmailSchema } from "../validators/auth.validator.js";
 import { google } from "../lib/oauth/google.js";
 import { OAUTH_EXCHANGE_EXPIRAY } from "../config/constants.js";
+import { sendEmails } from "../lib/resend-email.js";
 
 export const getRegisterPage = async (req, res) => {
   res.render("auth/register");
@@ -39,7 +40,7 @@ export const postRegister = async (req, res) => {
   let hashedPassword = await hashPassword(password);
   const user = await createUser({ name, email, password: hashedPassword });
 
-  await authenticateUser(req, res, user);
+  await authenticateUser({ req, res, user });
   return res.redirect("/");
 };
 
@@ -60,7 +61,7 @@ export const postLogin = async (req, res) => {
   }
   const isPasswordValid = await comparePassword(user.password, password);
   if (!isPasswordValid) return res.redirect("/login");
-  await authenticateUser(req, res, user);
+  await authenticateUser({ req, res, user });
 
   return res.redirect("/");
 };
@@ -119,7 +120,7 @@ export const resendVerificationLink = async (req, res) => {
       token: randomToken,
     });
 
-    sendEmail({
+    sendEmails({
       to: req.user.email,
       subject: "VERIFY YOUR EMAIL",
       html: `

@@ -23,7 +23,6 @@ export const getShortenerPage = async (req, res) => {
       shortCodes: links,
       host,
       userId,
-      sendEmails,
       errors: req.flash("errors"),
     });
   } catch (error) {

@@ -119,7 +119,7 @@ export const authenticateUser = async ({ req, res, user, name, email }) => {
     userAgent: req.headers["user-agent"],
   });
   console.log("user id", user.id);
-
+  
   const accessToken = createAccessToken({
     id: user.id,
     name,
