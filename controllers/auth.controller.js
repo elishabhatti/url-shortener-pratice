@@ -1,5 +1,4 @@
 import { decodeIdToken, generateCodeVerifier, generateState } from "arctic";
-import { sendEmail } from "../lib/nodemailer.js";
 import {
   createUser,
   hashPassword,
